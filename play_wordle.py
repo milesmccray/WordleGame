@@ -22,6 +22,7 @@ def main():
 		lists = wordle_game.guess(usr_guess.upper())
 		wordle_game.update_board(lists[0], lists[1])  # Updates game board
 		wordle_game.draw_board()  # Draws the board to screen
+		print('hi')
 
 	if wordle_game.wordle_solved:
 		print('You solved the puzzle!')
