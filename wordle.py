@@ -83,8 +83,9 @@ class Wordle:
 		hborder = '━'
 		vborder = '┃'
 		pad = ' '
+		title = colored(' WORDLE', 'white', attrs=['bold'])
 		print(cborder[0] + (hborder * 11) + cborder[1])
-		print(vborder + pad*2 + ' WORDLE' + pad*2 + vborder)
+		print(vborder + pad * 2 + title + pad * 2 + vborder)
 		for i in self.game_board:
 			print(vborder, *i, vborder)
 		print(cborder[2] + (hborder * 11) + cborder[3])
