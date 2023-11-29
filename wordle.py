@@ -1,22 +1,6 @@
 """
-GOALS:
-BACK-END
-- Gather 'all' 5-letter words and store in txt document. USE open()
-GAME-PART
-- Make sure the word exists using wordle_words and are 5 letters
-- Tracking what letters are a part of the word
-- Turn the game board lists into strings
-- Change board from correct letters to the actual guess, color code the
-letters
-- Retry system, probably need to del class instance?
-- DOuble check the usage of variables / list to make sure they are needed
-VISUAL
-- Create a simple terminal based interface
-- Expand interface using tkinter?
-
 The back-end to make checks for the main loop in play_wordle.py
 """
-
 from letterstate import LetterState
 from termcolor import colored
 
@@ -29,7 +13,6 @@ class Wordle:
 	def __init__(self, secret_word):
 		self.secret_word = secret_word.upper()
 		self.guesses = []
-		self.empty_board = []
 		self.game_board = []
 		self.answer = []
 		self.usr_board = []
@@ -74,21 +57,27 @@ class Wordle:
 		return result
 
 	def update_board(self, colored_guess):
+		"""Updates the game_board with colored usr_guess."""
 		self.game_board[len(self.guesses)-1] = colored_guess
+		self.draw_board()
 
 	def draw_board(self):
 		"""Draws the boarder and board to the screen."""
+		# Board variables
 		cborder = ['┏', '┓', '┗', '┛']
 		hborder = '━'
 		vborder = '┃'
 		pad = ' '
 		title = colored(' WORDLE', 'white', attrs=['bold'])
+
+		# Draw the board
 		print(cborder[0] + (hborder * 11) + cborder[1])
 		print(vborder + (pad * 2) + title + (pad * 2) + vborder)
 		# Unpacks the game_board list on every line
 		for i in self.game_board:
 			print(vborder, *i, vborder)
 		print(cborder[2] + (hborder * 11) + cborder[3])
+
 		print(f'You have {self.remaining_attempts} attempts remaining')
 
 	@property
@@ -103,4 +92,5 @@ class Wordle:
 
 	@property
 	def remaining_attempts(self):
+		"""Returns remaining attempts"""
 		return self.MAX_ATTEMPTS - len(self.guesses)
