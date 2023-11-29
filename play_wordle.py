@@ -49,9 +49,7 @@ def color_guess(result):
 		else:
 			c_letter = colored(letter.character, 'light_red')
 		colored_guess.append(c_letter)
-	# test = " ".join(colored_guess)
 
-	# print(test)
 	return colored_guess
 
 

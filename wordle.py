@@ -22,14 +22,13 @@ from termcolor import colored
 
 
 class Wordle:
-	MAX_ATTEMPTS = 6
-	WORD_LENGTH = 5
+	MAX_ATTEMPTS = 6  # You can change this
+	WORD_LENGTH = 5   # Changing this breaks the display board
 	VOIDED_LETTER = '*'
 
 	def __init__(self, secret_word):
 		self.secret_word = secret_word.upper()
 		self.guesses = []
-		self.empty_guess = ['_', '_', '_', '_', '_']
 		self.empty_board = []
 		self.game_board = []
 		self.answer = []
@@ -37,7 +36,7 @@ class Wordle:
 
 		# Creates the game board
 		for i in range(self.MAX_ATTEMPTS):
-			self.game_board.append(self.empty_guess)
+			self.game_board.append('_' * self.WORD_LENGTH)
 
 	def guess(self, word):
 		"""Stores usr_guess in list & converts them into letter lists"""
@@ -85,7 +84,8 @@ class Wordle:
 		pad = ' '
 		title = colored(' WORDLE', 'white', attrs=['bold'])
 		print(cborder[0] + (hborder * 11) + cborder[1])
-		print(vborder + pad * 2 + title + pad * 2 + vborder)
+		print(vborder + (pad * 2) + title + (pad * 2) + vborder)
+		# Unpacks the game_board list on every line
 		for i in self.game_board:
 			print(vborder, *i, vborder)
 		print(cborder[2] + (hborder * 11) + cborder[3])
