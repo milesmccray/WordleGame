@@ -4,21 +4,30 @@ Runs the actual 'loop' of the game
 
 import random  # randomly select word
 from wordle import Wordle  # imports the Wordle class to generate
-from termcolor import colored
+from termcolor import colored, cprint
 
 
 def main():
 	"""Runs main loop of the program and loads pre-reqs."""
-	word_set = load_word_set('data/wordle_words.txt')
-	secret_word = choose_word(word_set)  # Selects secret word
+	wordle_word_set = load_word_set('data/wordle_words.txt')
+	allowed_words = load_word_set('data/english_words.txt')
+	secret_word = choose_word(wordle_word_set)  # Selects secret word
 	wordle_game = Wordle(secret_word)  # Creates the Wordle Game
 	wordle_game.draw_board()  # Initializes the game board
 
 	while wordle_game.can_play:
-		print(secret_word)
-		print(f'You have {wordle_game.remaining_attempts} attempts remaining')
-		usr_guess = input('What is your guess?: ')
-		result = wordle_game.guess(usr_guess.upper())
+		usr_guess = input('What is your guess?: ').upper()
+
+		if len(usr_guess) != wordle_game.WORD_LENGTH:
+			cprint(f'Word must be {wordle_game.WORD_LENGTH}'
+				   f' characters long!', 'red')
+			continue
+
+		if usr_guess not in allowed_words:
+			cprint("Word does not exist!", 'red')
+			continue
+
+		result = wordle_game.guess(usr_guess)
 		colored_guess = color_guess(result)
 		wordle_game.update_board(colored_guess)
 		wordle_game.draw_board()  # Draws the board to screen
@@ -40,9 +49,9 @@ def color_guess(result):
 		else:
 			c_letter = colored(letter.character, 'light_red')
 		colored_guess.append(c_letter)
-		#test = " ".join(colored_guess)
+	# test = " ".join(colored_guess)
 
-	#print(test)
+	# print(test)
 	return colored_guess
 
 

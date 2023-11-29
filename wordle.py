@@ -88,6 +88,7 @@ class Wordle:
 		for i in self.game_board:
 			print(vborder, *i, vborder)
 		print(cborder[2] + (hborder * 11) + cborder[3])
+		print(f'You have {self.remaining_attempts} attempts remaining')
 
 	@property
 	def wordle_solved(self):
