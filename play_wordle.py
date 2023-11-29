@@ -2,10 +2,9 @@
 Runs the actual 'loop' of the game
 """
 
-from termcolor import colored, cprint  # Color implementation in console
 import random  # randomly select word
 from wordle import Wordle  # imports the Wordle class to generate
-import os  # for clearing terminal
+from termcolor import colored
 
 
 def main():
@@ -19,16 +18,32 @@ def main():
 		print(secret_word)
 		print(f'You have {wordle_game.remaining_attempts} attempts remaining')
 		usr_guess = input('What is your guess?: ')
-		lists = wordle_game.guess(usr_guess.upper())
-		wordle_game.update_board(lists[0], lists[1])  # Updates game board
+		result = wordle_game.guess(usr_guess.upper())
+		colored_guess = color_guess(result)
+		wordle_game.update_board(colored_guess)
 		wordle_game.draw_board()  # Draws the board to screen
-		print('hi')
 
 	if wordle_game.wordle_solved:
 		print('You solved the puzzle!')
 	else:
 		print('You failed to solve the puzzle...')
 		print(f'The word was {secret_word}')
+
+
+def color_guess(result):
+	colored_guess = []
+	for letter in result:
+		if letter.is_in_position:
+			c_letter = colored(letter.character, 'green')
+		elif letter.is_in_word:
+			c_letter = colored(letter.character, 'yellow')
+		else:
+			c_letter = colored(letter.character, 'light_red')
+		colored_guess.append(c_letter)
+		#test = " ".join(colored_guess)
+
+	#print(test)
+	return colored_guess
 
 
 def load_word_set(path):

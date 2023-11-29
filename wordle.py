@@ -9,6 +9,7 @@ GAME-PART
 - Change board from correct letters to the actual guess, color code the
 letters
 - Retry system, probably need to del class instance?
+- DOuble check the usage of variables / list to make sure they are needed
 VISUAL
 - Create a simple terminal based interface
 - Expand interface using tkinter?
@@ -16,44 +17,65 @@ VISUAL
 The back-end to make checks for the main loop in play_wordle.py
 """
 
+from letterstate import LetterState
+from termcolor import colored
+
 
 class Wordle:
 	MAX_ATTEMPTS = 6
 	WORD_LENGTH = 5
+	VOIDED_LETTER = '*'
 
 	def __init__(self, secret_word):
 		self.secret_word = secret_word.upper()
 		self.guesses = []
-		self.empty_board = ['_', '_', '_', '_', '_']
-		self.temp_board = ['_', '_', '_', '_', '_']
+		self.empty_guess = ['_', '_', '_', '_', '_']
+		self.empty_board = []
 		self.game_board = []
+		self.answer = []
+		self.usr_board = []
 
 		# Creates the game board
 		for i in range(self.MAX_ATTEMPTS):
-			self.game_board.append(self.empty_board)
+			self.game_board.append(self.empty_guess)
 
 	def guess(self, word):
 		"""Stores usr_guess in list & converts them into letter lists"""
 		usr_guess = word
 		self.guesses.append(usr_guess)
+		secret_copy = list(self.secret_word)
 
-		# Turns both the secret_word and usr_guess to a list and return
-		x = list(usr_guess)
-		y = list(self.secret_word)
-		lists = [x, y]
-		return lists
+		# Creates a LetterState object for each letter in guess
+		result = [LetterState(x) for x in usr_guess]
 
-	def update_board(self, usr_list, secret_list):
-		"""Updates game_board variable depending on overlapping letters."""
+		# Loops to see if letter is in correct position (GREEN)
+		for i in range(self.WORD_LENGTH):
+			letter = result[i]
 
-		# Compares the usr/secret letter lists for matches
-		for index, (x, y) in enumerate(zip(usr_list, secret_list)):
-			if x == y:
-				self.temp_board[index] = x  # Overwrites letter loc. on temp
-			# Assigns the game_board index list to the temp_board
-			self.game_board[(len(self.guesses) - 1)] = self.temp_board
-		# Resets the TEMP board for next attempt
-		self.temp_board = ['_', '_', '_', '_', '_']
+			if letter.character == secret_copy[i]:
+				letter.is_in_position = True
+				secret_copy[i] = self.VOIDED_LETTER
+
+		# Loops to see if letter is in the word (YELLOW)
+		for i in range(self.WORD_LENGTH):
+			letter = result[i]
+
+			# Skips if letter already is in correct position
+			if letter.is_in_position:
+				continue
+
+			# Checks every index in secret, for every one index in usr_guess
+			for j in range(self.WORD_LENGTH):
+				if letter.character == secret_copy[j]:
+					letter.is_in_word = True
+					secret_copy[j] = self.VOIDED_LETTER
+					break
+
+		# Returns a list of LetterState objects with flags set
+		return result
+
+	def update_board(self, colored_guess):
+		self.game_board[len(self.guesses)-1] = colored_guess
 
 	def draw_board(self):
 		"""Draws the boarder and board to the screen."""
