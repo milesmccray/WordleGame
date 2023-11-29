@@ -1,10 +1,10 @@
 """
 Runs the actual 'loop' of the game
 """
+
 import random
 from wordle import Wordle
 from termcolor import colored, cprint
-
 
 def main():
 	"""Runs main loop of the program and loads pre-reqs."""
